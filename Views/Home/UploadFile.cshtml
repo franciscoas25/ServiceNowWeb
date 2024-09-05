@@ -1,0 +1,94 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+<fieldset class="border p-2">
+    <legend class="float-none w-auto p-2">Análise de Correlação Chamados NOC</legend>
+    <div class="mb-3">
+        <div class="form-row" style="display: flex; align-items: center">
+            <div class="form-group col-md-2" style="margin-right: 20px">
+                <label>Intervalo:</label>
+                <input type="text" id="tbxIntervalo" class="form-control" placeholder="Informe o intervalo">
+            </div>
+            <div class="form-group col-md-2" style="margin-right: 20px">
+                <label>Quantidade:</label>
+                <input type="text" id="tbxQuantidade" class="form-control" placeholder="Informe a quantidade">
+            </div>
+            <div class="col-md-2 mt-4">
+                <div class="form-group">
+                    <input type="file" class="form-control-file" id="fileUpload">
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button id="btnProcessarPlanilha" class="btn btn-primary">Processar Planilha</button>
+            <button id="btnExportarPlanilha" class="btn btn-primary">Exportar Planilha</button>
+        </div>
+    </div>
+    <div id="divTreeView" class="height-100 bg-light" style="height: 600px; overflow-y: scroll; display: block">
+    </div>
+</fieldset>
+
+
+<script>
+
+    var fileName;
+
+    //$("#btnProcessarPlanilha").on("click", function () {
+
+    //    var path = "C:\\Francisco\\Projetos\\ServiceNowWeb\\" + fileName;
+
+    //    $("#divTreeView").jstree("destroy");
+
+    //    $("#divTreeView").jstree({
+    //        core: {
+    //            data: {
+    //                url: "/ChamadosServiceNow/ProcessarPlanilhaChamados",
+    //                data: { pathPlanilhaAlarmes: path, intervalo: $("#tbxIntervalo").val(), quantidade: $("#tbxQuantidade").val() }
+    //            }
+    //        }
+    //    });
+
+    //    $("#divTreeView").show();
+    //});
+
+    $("#btnProcessarPlanilha").on("click", function () {
+
+        $("#divTreeView").jstree("destroy");
+
+        $("#divTreeView").jstree({
+            core: {
+                data: {
+                    url: "/ChamadosServiceNow/ProcessarChamadosApi",
+                    data: { }
+                }
+            }
+        });
+
+        $("#divTreeView").show();
+    });
+
+    $("#fileUpload").change(function (e) {
+        fileName = e.target.files[0].name;
+    });
+
+    $("#btnExportarPlanilha").on("click", function () {
+        $.ajax({
+            type: "GET",
+            url: "/ChamadosServiceNow/ExportarChamadosCorrelatos",
+            success: function (response) {
+                //alert(response);
+                alert("Planilha gerada com sucesso!");
+            },
+            failure: function (response) {
+                alert("Falha");
+            },
+            error: function (response) {
+                alert("Erro");
+            }
+        });
+    });
+
+</script>
+
